@@ -1,0 +1,23 @@
+*.swp
+*~
+.DS_Store
+.bundle
+.yardoc
+coverage
+doc/yard/
+log
+tmp
+\#*
+.#*
+.rbenv-vars
+
+# from create-react-app
+/node_modules
+/.pnp
+.pnp.js
+/build
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
