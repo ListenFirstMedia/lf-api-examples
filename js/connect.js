@@ -87,12 +87,12 @@ function getAPI(cfg, token, path) {
     return new Promise((resolve, reject) => {
         const reqOpts = {
             method: "GET", 
-            path: path,
+            path: `${path}`,
             host: cfg.api_host,
             headers: {
                 "content-type": "application/json",
                 "authorization": `Bearer ${token.access_token}`,
-                "x-api-key": cfg.api_key
+                "x-api-key": `${cfg.api_key}`
             }
         };
 
@@ -122,7 +122,7 @@ function getAPI(cfg, token, path) {
 }
 
 function listDatasets(config, token) {
-    return getAPI(config, token, "/v20200626/datasets");
+    return getAPI(config, token, "/v20200626/brand_view_sets");
 }
 
 obtainAccessToken(LFM_API_CONFIG)
