@@ -21,7 +21,7 @@ async function fetchAllPages(session, path, opts, pageCallback) {
     let cb = args.slice(-1)[0]
     let pageCount = 0;
     let data = await session.fetch(path, opts);
-    console.log(path);
+    //console.log(path);
     cb(data);
 
     pageCount += 1;

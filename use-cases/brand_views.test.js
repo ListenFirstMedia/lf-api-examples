@@ -22,6 +22,17 @@ describe('Working with Brand Views', () => {
         //support.expectPaging(data);
     });
 
+    test('limit the lit of brand views with per_page', async() => {
+        let params = querystring.stringify({per_page: 2});
+        const data = await session.fetch(`/v20200626/brand_views?${params}`);
+        //console.log(data);
+        support.expectRecords(data);
+        support.expectPaging(data);
+        expect(data.record_count).toBeGreaterThan(2);
+        expect(data.records.length).toBe(2);
+        expect(data.next_page_token).toBeTruthy();
+    });
+
     test('list my brands', async () => {
         let myBrands = await utils.findBrandSetByName(session, 'My Brands');
         expect(myBrands).toBeTruthy();
@@ -64,7 +75,6 @@ describe('Working with Brand Views', () => {
 
         
         let sort = [];
-        sort.push({field: 'lfm.brand.programmers', dir: 'ASC'});
         sort.push({field: 'lfm.brand.name', dir: 'DESC'});
 
         let sortParam = JSON.stringify(sort);
@@ -107,6 +117,8 @@ describe('Working with Brand Views', () => {
         // filters.push({ field: 'lfm.brand.broadcast_dayparts', operator: '=', values: ['Prime Time'] });
         // filters.push({ field: 'lfm.brand.programmer_types', operator: '=', values: ['Premium Cable'] });
         // filters.push({ field: 'lfm.brand.programmers', operator: 'IN', values: ['HBO', 'Showtime', 'Epix'] });
+        
+        filters.push({ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] });
         filters.push({ field: 'lfm.brand.programmers', operator: '=', values: ['Showtime'] });
 
         //filters.push({ field: 'lfm.brand_view.id', operator: 'IN', values: [ 170749, 168428 ]});
@@ -114,7 +126,6 @@ describe('Working with Brand Views', () => {
 
         
         let sort = [];
-        sort.push({field: 'lfm.brand.programmers', dir: 'ASC'});
         sort.push({field: 'lfm.brand.name', dir: 'DESC'});
 
         let sortParam = JSON.stringify(sort);

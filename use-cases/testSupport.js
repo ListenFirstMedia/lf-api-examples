@@ -136,6 +136,24 @@ let TestSupport = {
         expect(DATASET_AUTHORIZATION_TYPES).toContain(ds.authorization_type);
     },
 
+    expectError: function(err, expectedCode, expectedServiceCode) {
+        expect(err).toBeTruthy();
+        expect(err.error_ts).toBeGreaterThan(0);
+        expect(err.error_msg).toBeTruthy();
+        expect(err.service_code).toBeGreaterThan(0);
+        expect(err.error_code).toBeGreaterThan(0);
+        if (expectedCode) {
+            expect(err.error_code).toBe(expectedCode);
+        }
+        if (expectedServiceCode) {
+            expect(err.service_code).toBe(expectedServiceCode);
+        }
+        if (err.error_details) {
+            expect(typeof err.error_details).toBe('object');
+            expect(Array.isArray(err.error_details)).toBe(false);
+        }
+    },
+
     yesterday: function() {
         return this.nDaysAgo(1);        
     },
