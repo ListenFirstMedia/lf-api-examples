@@ -12,7 +12,7 @@ tmp
 .rbenv-vars
 
 # from create-react-app
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 /build
