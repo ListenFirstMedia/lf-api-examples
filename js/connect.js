@@ -121,7 +121,7 @@ function getAPI(cfg, token, path) {
   });
 }
 
-function listDatasets(config, token) {
+function listBrandViewSets(config, token) {
     return getAPI(config, token, "/v20200626/brand_view_sets");
 }
 
@@ -129,7 +129,7 @@ obtainAccessToken(LFM_API_CONFIG)
     .then((token) => {
         console.log("Obtained an access token");
         console.log(token);
-        return listDatasets(LFM_API_CONFIG, token);
+        return listBrandViewSets(LFM_API_CONFIG, token);
     })
     .then((datasets) => {
         console.log(datasets);

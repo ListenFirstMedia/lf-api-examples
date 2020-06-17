@@ -161,4 +161,52 @@ describe('Working with Brand Views', () => {
         expect(customBrands.length).toBeGreaterThan(0);
         //support.expectPaging(data);
     });
+
+    test('has clear errors', async () => {        
+        let fields = [
+            'lfm.brand.broadcast_daypart',
+        ];
+        let fieldsParam = _.join(fields, ',');
+        queryStr = querystring.stringify({fields: fieldsParam});        
+        try {
+            let data = await session.fetch(`/v20200626/brand_views?${queryStr}`);
+            fail("expected error");
+        } catch (err) {
+            support.expectError(err);
+        }
+
+        let filters = [];
+        filters.push({ field: 'lfm.brand.programmer', operator: '=', values: ['Showtime'] });
+        let filterParam = JSON.stringify(filters);
+        queryStr = querystring.stringify({filters: filterParam});        
+        try {
+            let data = await session.fetch(`/v20200626/brand_views?${queryStr}`);
+            fail("expected error");
+        } catch (err) {            
+            support.expectError(err);
+        }
+
+        filters = [
+            { field: 'lfm.brand.programmers', operator: '==', values: ['Showtime'] }
+        ];
+        filterParam = JSON.stringify(filters);
+        queryStr = querystring.stringify({filters: filterParam});        
+        try {
+            let data = await session.fetch(`/v20200626/brand_views?${queryStr}`);
+            fail("expected error");
+        } catch (err) {            
+            support.expectError(err);
+        }
+
+        let sort = [];
+        sort.push({field: 'lfm.brand.programmers', dir: 'DESC'});
+        let sortParam = JSON.stringify(sort);
+        queryStr = querystring.stringify({sort: sortParam});        
+        try {
+            let data = await session.fetch(`/v20200626/brand_views?${queryStr}`);
+            fail("expected error");
+        } catch (err) {            
+            support.expectError(err);
+        }
+    });
 });

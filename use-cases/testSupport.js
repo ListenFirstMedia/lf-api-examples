@@ -155,10 +155,6 @@ let TestSupport = {
         if (expectedServiceCode) {
             expect(err.error_service_code).toBe(expectedServiceCode);
         }
-        if (err.error_details) {
-            expect(typeof err.error_details).toBe('object');
-            expect(Array.isArray(err.error_details)).toBe(false);
-        }
     },
 
     yesterday: function() {
