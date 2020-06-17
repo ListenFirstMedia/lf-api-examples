@@ -13,24 +13,37 @@ describe('Working with Brand Views', () => {
     });
 
     test('list all brand views', async() => {
-        const data = await session.fetch('/v20200626/brand_views');
+        const data = await session.fetch('/v20200626/brand_views?per_page=853');
         //console.log(data);
         support.expectRecords(data);
         data.records.forEach(bv => {
             support.expectBrandView(bv)
         });
+        expect(data.records.length).toBe(853);
         //support.expectPaging(data);
     });
 
-    test('limit the lit of brand views with per_page', async() => {
+    test('page through all brand views', async() => {        
+        const totalPages = await utils.fetchAllPages(session, '/v20200626/brand_views?per_page=10000', (data) =>{
+        //console.log(data);
+            support.expectRecords(data);
+            data.records.forEach(bv => {
+                support.expectBrandView(bv)
+            });
+        });
+        expect(totalPages).toBeGreaterThan(1);
+        //support.expectPaging(data);
+    });
+
+    test('limit the list of brand views with per_page', async() => {
         let params = querystring.stringify({per_page: 2});
         const data = await session.fetch(`/v20200626/brand_views?${params}`);
         //console.log(data);
         support.expectRecords(data);
         support.expectPaging(data);
-        expect(data.record_count).toBeGreaterThan(2);
+        //expect(data.record_count).toBeGreaterThan(2);
         expect(data.records.length).toBe(2);
-        expect(data.next_page_token).toBeTruthy();
+        expect(data.has_more_pages).toBe(true);
     });
 
     test('list my brands', async () => {
@@ -90,7 +103,7 @@ describe('Working with Brand Views', () => {
         support.expectRecords(data);
         data.records.forEach(bv => {
             support.expectBrandView(bv, fields)
-            console.log(JSON.stringify(bv));
+            //console.log(JSON.stringify(bv));
         });
         //support.expectPaging(data);
         let [stdBrands, customBrands] = _.partition(data.records, (bv) => bv.type === 'STANDARD');
@@ -118,7 +131,7 @@ describe('Working with Brand Views', () => {
         // filters.push({ field: 'lfm.brand.programmer_types', operator: '=', values: ['Premium Cable'] });
         // filters.push({ field: 'lfm.brand.programmers', operator: 'IN', values: ['HBO', 'Showtime', 'Epix'] });
         
-        filters.push({ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] });
+        //filters.push({ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] });
         filters.push({ field: 'lfm.brand.programmers', operator: '=', values: ['Showtime'] });
 
         //filters.push({ field: 'lfm.brand_view.id', operator: 'IN', values: [ 170749, 168428 ]});

@@ -51,7 +51,8 @@ describe('Working with Brand View Sets', () => {
 
         let queryParams = querystring.stringify({
             //fields: _.join(fields, ','), 
-            sort: JSON.stringify(sort)
+            sort: JSON.stringify(sort),
+            per_page: 1000
         }); 
         
         let path = `/v20200626/brand_view_sets/4626/brand_views?${queryParams}`;
@@ -110,8 +111,8 @@ describe('Working with Brand View Sets', () => {
         support.expectRecords(data);
         support.expectPaging(data);
         expect(data.records.length).toBe(2);
-        expect(data.record_count).toBeGreaterThan(2);
-        expect(data.next_page_token).toBeTruthy();
+        //expect(data.record_count).toBeGreaterThan(2);
+        expect(data.has_more_pages).toBe(true);
     });
 
     test('limit the members of a brand view set returned with per page param', async () => {     
@@ -122,7 +123,7 @@ describe('Working with Brand View Sets', () => {
         support.expectRecords(data);
         support.expectPaging(data);
         expect(data.records.length).toBe(2);
-        expect(data.record_count).toBeGreaterThan(2);
-        expect(data.next_page_token).toBeTruthy();
+        //expect(data.record_count).toBeGreaterThan(2);
+        expect(data.has_more_pages).toBe(true);
     });
 });

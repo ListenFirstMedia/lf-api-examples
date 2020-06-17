@@ -8,10 +8,12 @@ describe('Performing Analytics', () => {
 
     test('retrieve a few metrics for a single brand', async () => {        
         let requestData = {
-            ids: [176817],
             dataset_id: 'dataset_brand_listenfirst',
             start_date: support.nDaysAgo(7),
             end_date: support.yesterday(),
+            filters: [
+                { field: "lfm.brand_view.id", operator: "=", values:[176817]}
+            ],
             metrics: [
                 'lfm.audience_ratings.public_fan_acquisition_score',
                 'lfm.audience_ratings.public_audience_footprint'	
@@ -26,7 +28,7 @@ describe('Performing Analytics', () => {
             source_attributes: ['lfm.brand.name'],            
         }
 
-        //console.log(requestData);
+        //support.dump(requestData);
 
         let fetchOpts = {
             method: 'post',
@@ -46,13 +48,14 @@ describe('Performing Analytics', () => {
 
         let [som, eom] = support.lastMonth();
         let requestData = {
-            ids: myBrandViewIDs,
             dataset_id: 'dataset_content_facebook',
             start_date: som,
             end_date: eom,
             filters: [
-                {field: 'lfm.content.channel', 'operator': '=', 'values': ['facebook']},
-                {field: 'lfm.content.type', 'operator': '=', 'values': ['video']},
+                //{field: "lfm.brand_view_set.id", operator: '=', values: [myBrands.id]},
+                {field: "lfm.brand_view.id", operator: 'IN', values: myBrandViewIDs},
+                {field: 'lfm.content.channel', operator: '=', values: ['facebook']},
+                {field: 'lfm.content.type', operator: '=', values: ['video']},
             ],
             metrics: [
                 'facebook.post.interactions'
@@ -69,7 +72,7 @@ describe('Performing Analytics', () => {
             per_page: 100            
         }
 
-        //console.log(requestData);
+        //support.dump(requestData);
         let fetchOpts = {
             method: 'post',
             body: JSON.stringify(requestData)
@@ -84,19 +87,35 @@ describe('Performing Analytics', () => {
     test('retrieve private metrics for a brand', async () => {
         let myBrands = await utils.findBrandSetByName(session, 'My Brands');
         let cbsNewsBrandIDs = [];
-        await utils.fetchAllPages(session, `/v20200626/brand_view_sets/${myBrands.id}/brand_views`, (data) => {
+        let filters = JSON.stringify([
+            { field: 'lfm.brand.name', operator: 'ILIKE', values:['CBS News%']},
+            //{ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM']}
+        ]);
+        let queryParam = querystring.stringify({filters});
+        let path = `/v20200626/brand_view_sets/${myBrands.id}/brand_views?${queryParam}`
+        await utils.fetchAllPages(session, path, (data) => {            
             data.records.forEach((bv) => {
                 if (bv.type == 'CUSTOM' && /CBS News/.test(bv.name)) {
                     cbsNewsBrandIDs.push(bv.id);  
+                } else if (bv.type == 'CUSTOM') {
+                    fail("ILIKE didn't work");
+                } else {
+                  //  fail('brand_view.type filter did not work');
                 }
             });
         });
 
+        //console.log(cbsNewsBrandIDs.length);
+
         let requestData = {
-            ids: cbsNewsBrandIDs,
+            //ids: cbsNewsBrandIDs,
             dataset_id: 'dataset_brand_facebook',
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
+            filters: [
+                //{ field: 'lfm.brand.name', operator: 'ILIKE', values:['CBS News%']}
+                { field: 'lfm.brand_view.id', operator: 'IN', values: cbsNewsBrandIDs}
+            ],
             metrics: [
                 'facebook.page_insight.fbpai_video_views_organic',
                 'facebook.page_insight.fbpai_impressions_organic'	
@@ -116,7 +135,7 @@ describe('Performing Analytics', () => {
         }
 
         const data = await session.fetch('/v20200626/analytics/fetch', fetchOpts);
-        console.log(JSON.stringify(data, null, 2));
+        //console.log(JSON.stringify(data, null, 2));
         let expectedCols = _.concat(requestData.metrics, requestData.group_by, requestData.source_attributes);
         support.expectTableResponse(data, expectedCols);
     });
@@ -124,21 +143,26 @@ describe('Performing Analytics', () => {
     async function fetchMixedBrands() {
         let mixedBrandIDs = [];
         let filters = [
-            { field: 'lfm.brand.genres', operation: '=', values: ['News']}
+            { field: 'lfm.brand.genres', operator: '=', values: ['News']},
+            { field: 'lfm.brand.programmers', operator: 'IN', values: ['CBS', 'NBC']},
         ];
-        await utils.fetchAllPages(session, `/v20200626/brand_views`, (data) => {
+        let query = querystring.stringify({per_page:1000, filters: JSON.stringify(filters)});
+        let allBrandIDs = [];
+        await utils.fetchAllPages(session, `/v20200626/brand_views?${query}`, (data) => {
             data.records.forEach((bv) => {
+                allBrandIDs.push(bv.id);                
                 if (bv.type == 'CUSTOM' && /CBS News/.test(bv.name)) {
-                    console.log(bv.name);
+                    //console.log(bv.name);
                     mixedBrandIDs.push(bv.id);  
                 }
 
                 if (bv.type == 'STANDARD' && /Today Show/.test(bv.name)) {
-                    console.log(bv.name);
+                    //console.log(bv.name);
                     mixedBrandIDs.push(bv.id);  
                 }
             });
         });
+        //console.log(allBrandIDs.length);
         return mixedBrandIDs;
     }
 
@@ -146,10 +170,15 @@ describe('Performing Analytics', () => {
         let mixedBrandIDs = await fetchMixedBrands();
         
         let requestData = {
-            ids: mixedBrandIDs,
+            //ids: mixedBrandIDs,
             dataset_id: 'dataset_brand_facebook',
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
+            filters: [
+                { field: 'lfm.brand_view.id', operator: 'IN', values: mixedBrandIDs },
+                { field: 'lfm.brand.genres', operator: '=', values: ['News']},
+                { field: 'lfm.brand.programmers', operator: 'IN', values: ['CBS', 'NBC']}
+            ],
             metrics: [
                 'facebook.page_insight.fbpai_video_views_organic',
                 'facebook.page_insight.fbpai_impressions_organic'	
@@ -163,6 +192,7 @@ describe('Performing Analytics', () => {
             source_attributes: ['lfm.brand.name'], 
         }
 
+        //support.dump(requestData);
         let fetchOpts = {
             method: 'post',
             body: JSON.stringify(requestData)
@@ -172,19 +202,21 @@ describe('Performing Analytics', () => {
             const data = await session.fetch('/v20200626/analytics/fetch', fetchOpts);
             fail('expected error response');
         } catch(err) {
-            console.log(JSON.stringify(err, null, 2))
             support.expectError(err, 401, 200010);
         }        
     });
 
     test('test partial private data behavior', async () => {
-        let mixedBrandIDs = await fetchMixedBrands();
+        //let mixedBrandIDs = await fetchMixedBrands();
         
-        let requestData = {
-            ids: mixedBrandIDs,
+        let requestData = {            
             dataset_id: 'dataset_content_facebook',
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
+            filters: [
+                { field: 'lfm.brand.genres', operator: '=', values: ['News']},
+                { field: 'lfm.brand.programmers', operator: 'IN', values: ['CBS', 'NBC']}
+            ],
             metrics: [
                 'facebook.post_insight.fbpoi_impressions_paid',
             ],
@@ -200,15 +232,69 @@ describe('Performing Analytics', () => {
             source_attributes: ['lfm.brand.name'], 
         }
 
-        console.log(JSON.stringify(requestData, null, 2));
-        
+        //console.log(JSON.stringify(requestData, null, 2));
+
         let fetchOpts = {
             method: 'post',
             body: JSON.stringify(requestData)
         }
         
         const data = await session.fetch('/v20200626/analytics/fetch', fetchOpts);
-        console.log(JSON.stringify(data, null, 2));
+        //console.log(JSON.stringify(data, null, 2));
         support.expectTableResponse(data);        
+    });
+
+
+    test('fetch all pages of analyitcs', async () => {        
+        let requestData = {
+            dataset_id: 'dataset_brand_listenfirst',
+            start_date: support.nDaysAgo(365),
+            end_date: support.yesterday(),
+            filters: [
+                { field: "lfm.brand_view.id", operator: "=", values:[176817]}
+            ],
+            metrics: [
+                'lfm.audience_ratings.public_fan_acquisition_score',
+                'lfm.audience_ratings.public_audience_footprint'	
+            ],
+            group_by: [
+                'lfm.fact.date_str',
+                'lfm.brand_view.id'
+            ],
+            sort: [
+                {field: 'lfm.fact.date_str', dir: "DESC"}
+            ], 
+            source_attributes: ['lfm.brand.name'], 
+            per_page: 100           
+        }
+
+        //support.dump(requestData);
+
+        let fetchOpts = {
+            method: 'post',
+            body: JSON.stringify(requestData)
+        }
+
+        let results = [];
+        let columns = null;
+        let pageCnt = 0;
+        const totalPages = await utils.fetchAllPages(session, '/v20200626/analytics/fetch', fetchOpts, (data) => {
+            pageCnt += 1;
+            //console.log(`received page: ${pageCnt}`);
+            expect(data.records).toBeTruthy();
+            expect(data.records.length).toBeLessThanOrEqual(requestData.per_page);
+            if (columns === null) {
+                columns = data.columns;
+            }
+            results = results.concat(data.records);
+        });
+        expect(totalPages).toBeGreaterThanOrEqual(365 / requestData.per_page);
+
+        let tbl = { columns: columns, records: results, page: 1 };
+        expect(results.length).toBe(365);
+        
+        //console.log(data);
+        let expectedCols = _.concat(requestData.metrics, requestData.group_by, requestData.source_attributes);
+        support.expectTableResponse(tbl, expectedCols);
     });
 });

@@ -105,8 +105,14 @@ const Session = {
         if (res.ok) {            
             return data;
         } else {
-            console.log(data); 
-            throw new Error(`fetch ${relPath} returned status: ${res.status}`);
+            console.log(data);            
+            if (res.status === 429) {
+                // sleep and retry
+                await new Promise(resolve => setTimeout(resolve, 60000));
+                return this.fetch(relPath, opts);
+            }
+ 
+            throw data; //new Error(data);//`fetch ${relPath} returned status: ${res.status}`);
         } 
     }
 };

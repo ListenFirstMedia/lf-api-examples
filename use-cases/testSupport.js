@@ -37,9 +37,13 @@ let TestSupport = {
         expect(data.page).toBeDefined();
         expect(typeof data.page).toBe('number');
         expect(data.page).toBeGreaterThan(0);
-        //expect(data.next_page_token).toBeDefined(); // possibly null
+        expect(data.next_page_token).not.toBeDefined();        
         if (perPage !== undefined) {
             expect(data.records.length).toBeLessThanOrEqual(perPage);
+        }
+
+        if (data.has_more_pages) {
+            expect(typeof data.has_more_pages).toBe('boolean');
         }
     },
 
@@ -78,7 +82,9 @@ let TestSupport = {
 
     expectTableResponse: function(data, expectedCols) {
         this.expectRecords(data);
-        this.expectPaging(data);
+        if (data.page) {
+            this.expectPaging(data);
+        }
         expect(data.columns).toBeDefined();
         expect(typeof data.columns).toBe('object');
         expect(Array.isArray(data.columns)).toBeTruthy();                
@@ -99,6 +105,7 @@ let TestSupport = {
         expect(bv.type).toBeTruthy();
         expect(BRAND_VIEW_TYPES).toContain(bv.type);
         expect(bv.dimensions).toBeDefined();
+        expectedDims = _.uniq(_.concat(expectedDims, ['lfm.brand.name']))
         if (bv.dimensions && expectedDims) {
             this.expectIncludesOnly(_.keys(bv.dimensions), expectedDims);
         } else if (expectedDims) {
@@ -140,13 +147,13 @@ let TestSupport = {
         expect(err).toBeTruthy();
         expect(err.error_ts).toBeGreaterThan(0);
         expect(err.error_msg).toBeTruthy();
-        expect(err.service_code).toBeGreaterThan(0);
+        expect(err.error_service_code).toBeGreaterThan(0);
         expect(err.error_code).toBeGreaterThan(0);
         if (expectedCode) {
             expect(err.error_code).toBe(expectedCode);
         }
         if (expectedServiceCode) {
-            expect(err.service_code).toBe(expectedServiceCode);
+            expect(err.error_service_code).toBe(expectedServiceCode);
         }
         if (err.error_details) {
             expect(typeof err.error_details).toBe('object');
@@ -166,7 +173,11 @@ let TestSupport = {
         let som = moment().subtract(1, 'months').startOf('month');
         let eom = moment(som).endOf('month')
         return _.map([som, eom], (d) => d.format('YYYY-MM-DD'));
-    }    
+    },
+    
+    dump: function(obj) {
+        console.log(JSON.stringify(obj, null, 2));
+    }
 }
 
 module.exports = TestSupport

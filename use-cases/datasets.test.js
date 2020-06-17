@@ -28,6 +28,7 @@ describe('Working with Datasets', () => {
 
     test('can list values of a listable content dimension', async () => {
         const data = await session.fetch('/v20200626/list_values?field=lfm.content.channel');
+        //support.dump(data);
         support.expectTableResponse(data);        
     });
 });
