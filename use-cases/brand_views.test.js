@@ -141,6 +141,7 @@ describe('Working with Brand Views', () => {
         let sort = [];
         sort.push({field: 'lfm.brand.name', dir: 'DESC'});
 
+
         let sortParam = JSON.stringify(sort);
         let filterParam = JSON.stringify(filters);
         let fieldsParam = _.join(fields, ',');
@@ -161,6 +162,34 @@ describe('Working with Brand Views', () => {
         expect(customBrands.length).toBeGreaterThan(0);
     
         //support.expectPaging(data);
+    });
+
+    test('find all CBS All Access CUSTOM brands', async () => {        
+        let fields = [
+            //'lfm.brand_view.type'
+        ];
+
+        let filters = [];        
+        filters.push({ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] });
+        filters.push({ field: 'lfm.brand.programmers', operator: '=', values: ['CBS All Access'] });
+        
+        let sort = [];
+        sort.push({field: 'lfm.brand.name', dir: 'ASC'});
+
+        let sortParam = JSON.stringify(sort);
+        let filterParam = JSON.stringify(filters);
+        let fieldsParam = _.join(fields, ',');
+
+        let queryStr = querystring.stringify({fields: fieldsParam, sort: sortParam, filters: filterParam});
+        const data = await session.fetch(`/v20200626/brand_views?${queryStr}`);             
+        support.dump(data);
+        support.expectRecords(data);        
+        data.records.forEach(bv => {
+            support.expectBrandView(bv, fields)                        
+        });
+        let [stdBrands, customBrands] = _.partition(data.records, (bv) => bv.type === 'STANDARD');
+        expect(stdBrands.length).toBe(0);
+        expect(customBrands.length).toBeGreaterThan(0);    
     });
 
     test('has clear errors', async () => {        

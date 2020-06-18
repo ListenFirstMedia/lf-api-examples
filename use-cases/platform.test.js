@@ -29,7 +29,7 @@ describe('Working with Platform Endpoints', () => {
     test('list all errors', async () => {        
         const data = await session.fetch('/v20200626/platform/error_codes');
 
-        //console.log(data);
+        support.dump(data);
         support.expectRecords(data);
         data.records.forEach((error) =>{
             expect(error.error_service_code).toBeGreaterThan(0);
