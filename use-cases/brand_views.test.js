@@ -111,7 +111,7 @@ describe('Working with Brand Views', () => {
         expect(customBrands.length).toBe(0);
     });
 
-    test('find all Showtime brands', async () => {        
+    test('find all CBS All Access brands', async () => {        
         let fields = [
             'lfm.brand.broadcast_dayparts',
             //'lfm.brand.name',
@@ -132,7 +132,7 @@ describe('Working with Brand Views', () => {
         // filters.push({ field: 'lfm.brand.programmers', operator: 'IN', values: ['HBO', 'Showtime', 'Epix'] });
         
         //filters.push({ field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] });
-        filters.push({ field: 'lfm.brand.programmers', operator: '=', values: ['Showtime'] });
+        filters.push({ field: 'lfm.brand.programmers', operator: '=', values: ['CBS All Access'] });
 
         //filters.push({ field: 'lfm.brand_view.id', operator: 'IN', values: [ 170749, 168428 ]});
         //filters.push({ field: 'lfm.brand.name', operator: '=', values: ['The Righteous Gemstones'] })
@@ -159,6 +159,7 @@ describe('Working with Brand Views', () => {
         let [stdBrands, customBrands] = _.partition(data.records, (bv) => bv.type === 'STANDARD');
         expect(stdBrands.length).toBeGreaterThan(0);
         expect(customBrands.length).toBeGreaterThan(0);
+    
         //support.expectPaging(data);
     });
 
