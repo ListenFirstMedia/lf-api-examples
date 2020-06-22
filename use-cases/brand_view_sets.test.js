@@ -94,7 +94,7 @@ describe('Working with Brand View Sets', () => {
         let path = `/v20200626/brand_view_sets/${tvBrandSetID}/brand_views?${queryParams}`;
 
         let pageCount = await utils.fetchAllPages(session, path, (data) => {
-            support.dump(data);
+            //support.dump(data);
             support.expectRecords(data);
             support.expectPaging(data);
             data.records.forEach((bv) => {
