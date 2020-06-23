@@ -341,4 +341,46 @@ describe('Performing Analytics', () => {
         );
         support.expectTableResponse(tbl, expectedCols);
     });
+
+    test('1000 brand limit', async () => {
+        let tvBrands = await utils.findBrandSetByName(session, 'TV Universe');
+        let tvBrandIDs = await utils.buildBrandViewCohort(
+            session,
+            null,
+            tvBrands.id
+        );
+        expect(tvBrandIDs.length).toBeGreaterThan(1000);
+        console.log(tvBrandIDs.length);
+
+        let requestData = {
+            dataset_id: 'dataset_brand_facebook',
+            start_date: support.nDaysAgo(7),
+            end_date: support.yesterday(),
+            filters: [
+                {
+                    field: 'lfm.brand_view.id',
+                    operator: 'IN',
+                    values: tvBrandIDs,
+                },
+            ],
+            metrics: ['facebook.page.total_post_likes_c'],
+            group_by: ['lfm.brand_view.id'],
+        };
+
+        let fetchOpts = {
+            method: 'post',
+            body: JSON.stringify(requestData),
+        };
+
+        try {
+            const data = await session.fetch(
+                '/v20200626/analytics/fetch',
+                fetchOpts
+            );
+            fail('expected brand limit error');
+        } catch (err) {
+            support.dump(err);
+            support.expectError(err);
+        }
+    });
 });

@@ -54,9 +54,9 @@ async function fetchAllPages(session, path, opts, pageCallback) {
 }
 
 async function buildBrandViewCohort(session, filters, brandSetID) {
-    let path = '/v20200626/brand_views?per_page=1000';
+    let path = '/v20200626/brand_views?per_page=10000';
     if (brandSetID) {
-        path = `/v20200626/brand_view_sets/${brandSetID}/brand_views?per_page=1000`;
+        path = `/v20200626/brand_view_sets/${brandSetID}/brand_views?per_page=10000`;
     }
 
     if (filters && filters.length > 0) {

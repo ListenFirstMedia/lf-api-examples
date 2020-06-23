@@ -6,7 +6,7 @@ const FIELD_DATA_TYPES = [
     'STRING',
     'INTEGER',
     'FLOAT',
-    'TIME',
+    'DATETIME',
     'BOOLEAN',
     'STRINGSET',
 ];
