@@ -3,7 +3,7 @@ const support = require('./testSupport');
 
 describe('Working with Datasets', () => {
     test('can list all datasets', async () => {
-        const data = await session.fetch('/v20200626/datasets');
+        const data = await session.fetch('/v20200626/dictionary/datasets');
         //support.dump(data);
         support.expectRecords(data);
         data.records.forEach((ds) => {
@@ -13,7 +13,7 @@ describe('Working with Datasets', () => {
 
     test('can describe a datasets', async () => {
         const data = await session.fetch(
-            '/v20200626/datasets/dataset_content_listenfirst'
+            '/v20200626/dictionary/datasets/dataset_content_listenfirst'
         );
         //support.dump(data);
         support.expectRecord(data);
@@ -23,14 +23,14 @@ describe('Working with Datasets', () => {
 
     test('can list values of a listable brand dimension', async () => {
         const data = await session.fetch(
-            '/v20200626/list_values?field=lfm.brand.genres'
+            '/v20200626/dictionary/field_values?field=lfm.brand.genres'
         );
         support.expectTableResponse(data);
     });
 
     test('can list values of a listable content dimension', async () => {
         const data = await session.fetch(
-            '/v20200626/list_values?field=lfm.content.channel'
+            '/v20200626/dictionary/field_values?field=lfm.content.channel'
         );
         //support.dump(data);
         support.expectTableResponse(data);

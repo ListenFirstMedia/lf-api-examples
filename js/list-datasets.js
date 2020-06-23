@@ -9,7 +9,7 @@ const api_key = process.env.LFM_API_KEY;
 https.request({
     protocol: 'https:',    
     port: 443,
-    path: '/v20200626/datasets',
+    path: '/v20200626/dictionary/datasets',
     host: 'api.lfmdev.in',
     headers: {
         "content-type": "application/json",
