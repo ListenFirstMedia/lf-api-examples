@@ -126,28 +126,15 @@ describe('Performing Analytics', () => {
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
             filters: [
-                // once these are supported, they would replcaes the brand_view.id IN filter
                 {
                     field: 'lfm.brand_view.set_names',
                     operator: 'IN',
                     values: ['My Brands'],
                 },
-                // {
-                //     field: 'lfm.brand.name',
-                //     operator: 'ILIKE',
-                //     values: ['CBS News%'],
-                // },
                 {
                     field: 'lfm.brand.name',
-                    operator: 'IN',
-                    values: [
-                        'CBS News',
-                        'CBS News Entertainment',
-                        'CBS News Health',
-                        'CBS News Politics',
-                        'CBS News Sci Tech',
-                        'CBS News Sunday Morning',
-                    ],
+                    operator: 'ILIKE',
+                    values: ['CBS News%'],
                 },
                 {
                     field: 'lfm.brand_view.type',
@@ -164,6 +151,7 @@ describe('Performing Analytics', () => {
             source_attributes: ['lfm.brand.name'],
         };
 
+        // support.dump(requestData);
         let fetchOpts = {
             method: 'post',
             body: JSON.stringify(requestData),
