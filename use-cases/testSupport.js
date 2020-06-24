@@ -9,6 +9,7 @@ const FIELD_DATA_TYPES = [
     'DATETIME',
     'BOOLEAN',
     'STRINGSET',
+    'INTEGERSET',
 ];
 const FIELD_CAPABILITIES = [
     'SORTABLE',

@@ -54,16 +54,22 @@ async function fetchAllPages(session, path, opts, pageCallback) {
 }
 
 async function buildBrandViewCohort(session, filters, brandSetID) {
-    let path = '/v20200626/brand_views?per_page=10000';
+    let queryArgs = {
+        per_page: 10000,
+    };
+
+    let path = '/v20200626/brand_views';
     if (brandSetID) {
-        path = `/v20200626/brand_view_sets/${brandSetID}/brand_views?per_page=10000`;
+        path = `/v20200626/brand_view_sets/${brandSetID}/brand_views`;
     }
 
     if (filters && filters.length > 0) {
         let filterParam = JSON.stringify(filters);
-        let queryStr = querystring.stringify({ filters: filterParam });
-        path = `${path}?${queryStr}`;
+        queryArgs.filters = filterParam;
     }
+
+    let queryStr = querystring.stringify(queryArgs);
+    path = `${path}?${queryStr}`;
 
     let brandViewIDs = [];
     await fetchAllPages(session, path, (data) => {

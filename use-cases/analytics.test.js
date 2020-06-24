@@ -43,10 +43,17 @@ describe('Performing Analytics', () => {
     });
 
     test('retrieve my accounts top 100 facebook videos from last month', async () => {
+        // myBrandViewIDs used to test the filters.  they are not used in the fetch
         let myBrands = await utils.findBrandSetByName(session, 'My Brands');
         let myBrandViewIDs = await utils.buildBrandViewCohort(
             session,
-            [],
+            [
+                {
+                    field: 'lfm.brand.programmers',
+                    operator: 'IN',
+                    values: ['CBS'],
+                },
+            ],
             myBrands.id
         );
 
@@ -56,12 +63,15 @@ describe('Performing Analytics', () => {
             start_date: som,
             end_date: eom,
             filters: [
-                // if the following field is supported, it woulld replace mBrandViewIDs
-                // {field: "lfm.brand_view_set.id", operator: '=', values: [myBrands.id]},
                 {
-                    field: 'lfm.brand_view.id',
+                    field: 'lfm.brand_view.set_names',
                     operator: 'IN',
-                    values: myBrandViewIDs,
+                    values: ['My Brands'],
+                },
+                {
+                    field: 'lfm.brand.programmers',
+                    operator: 'IN',
+                    values: ['CBS'],
                 },
                 {
                     field: 'lfm.content.channel',
@@ -98,46 +108,51 @@ describe('Performing Analytics', () => {
             requestData.source_attributes
         );
         support.expectTableResponse(data, expectedCols);
+        let brandViewIdx = _.findIndex(
+            data.columns,
+            (col) => col.id === 'lfm.brand_view.id'
+        );
+        expect(brandViewIdx).toBeGreaterThan(0);
+        data.records.forEach((row) => {
+            let brandViewID = row[brandViewIdx];
+            expect(brandViewID).toBeGreaterThan(0);
+            expect(myBrandViewIDs).toContain(brandViewID);
+        });
     });
 
     test('retrieve private metrics for a brand', async () => {
-        let myBrands = await utils.findBrandSetByName(session, 'My Brands');
-        let cbsNewsBrandIDs = [];
-        let filters = JSON.stringify([
-            {
-                field: 'lfm.brand.name',
-                operator: 'ILIKE',
-                values: ['CBS News%'],
-            },
-            { field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM'] },
-        ]);
-        let queryParam = querystring.stringify({ filters });
-        let path = `/v20200626/brand_view_sets/${myBrands.id}/brand_views?${queryParam}`;
-        await utils.fetchAllPages(session, path, (data) => {
-            data.records.forEach((bv) => {
-                if (bv.type == 'CUSTOM' && /CBS News/.test(bv.name)) {
-                    cbsNewsBrandIDs.push(bv.id);
-                } else if (bv.type == 'CUSTOM') {
-                    fail("ILIKE didn't work");
-                } else {
-                    fail('brand_view.type filter did not work');
-                }
-            });
-        });
-
         let requestData = {
             dataset_id: 'dataset_brand_facebook',
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
             filters: [
                 // once these are supported, they would replcaes the brand_view.id IN filter
-                // { field: 'lfm.brand_vew_set.name', operator: '=', values:['My Brands']},
-                // { field: 'lfm.brand.name', operator: 'ILIKE', values:['CBS News%']},
-                // { field: 'lfm.brand_view.type', operator: '=', values: ['CUSTOM']},
                 {
-                    field: 'lfm.brand_view.id',
+                    field: 'lfm.brand_view.set_names',
                     operator: 'IN',
-                    values: cbsNewsBrandIDs,
+                    values: ['My Brands'],
+                },
+                // {
+                //     field: 'lfm.brand.name',
+                //     operator: 'ILIKE',
+                //     values: ['CBS News%'],
+                // },
+                {
+                    field: 'lfm.brand.name',
+                    operator: 'IN',
+                    values: [
+                        'CBS News',
+                        'CBS News Entertainment',
+                        'CBS News Health',
+                        'CBS News Politics',
+                        'CBS News Sci Tech',
+                        'CBS News Sunday Morning',
+                    ],
+                },
+                {
+                    field: 'lfm.brand_view.type',
+                    operator: '=',
+                    values: ['CUSTOM'],
                 },
             ],
             metrics: [
@@ -167,58 +182,22 @@ describe('Performing Analytics', () => {
         support.expectTableResponse(data, expectedCols);
     });
 
-    async function fetchMixedBrands() {
-        let mixedBrandIDs = [];
-        let filters = [
-            { field: 'lfm.brand.genres', operator: '=', values: ['News'] },
-            {
-                field: 'lfm.brand.programmers',
-                operator: 'IN',
-                values: ['CBS', 'NBC'],
-            },
-        ];
-        let query = querystring.stringify({
-            per_page: 1000,
-            filters: JSON.stringify(filters),
-        });
-        let allBrandIDs = [];
-        await utils.fetchAllPages(
-            session,
-            `/v20200626/brand_views?${query}`,
-            (data) => {
-                data.records.forEach((bv) => {
-                    allBrandIDs.push(bv.id);
-                    if (bv.type == 'CUSTOM' && /CBS News/.test(bv.name)) {
-                        mixedBrandIDs.push(bv.id);
-                    }
-
-                    if (bv.type == 'STANDARD' && /Today Show/.test(bv.name)) {
-                        mixedBrandIDs.push(bv.id);
-                    }
-                });
-            }
-        );
-        return mixedBrandIDs;
-    }
-
     test('test strict private data behavior', async () => {
-        let mixedBrandIDs = await fetchMixedBrands();
-
         let requestData = {
             dataset_id: 'dataset_brand_facebook',
             start_date: support.nDaysAgo(14),
             end_date: support.yesterday(),
             filters: [
-                {
-                    field: 'lfm.brand_view.id',
-                    operator: 'IN',
-                    values: mixedBrandIDs,
-                },
                 { field: 'lfm.brand.genres', operator: '=', values: ['News'] },
                 {
                     field: 'lfm.brand.programmers',
                     operator: 'IN',
                     values: ['CBS', 'NBC'],
+                },
+                {
+                    field: 'lfm.brand.name',
+                    operator: 'IN',
+                    values: ['CBS News', 'Today Show'],
                 },
             ],
             metrics: [
@@ -350,7 +329,6 @@ describe('Performing Analytics', () => {
             tvBrands.id
         );
         expect(tvBrandIDs.length).toBeGreaterThan(1000);
-        console.log(tvBrandIDs.length);
 
         let requestData = {
             dataset_id: 'dataset_brand_facebook',
@@ -379,7 +357,7 @@ describe('Performing Analytics', () => {
             );
             fail('expected brand limit error');
         } catch (err) {
-            support.dump(err);
+            //support.dump(err);
             support.expectError(err);
         }
     });
