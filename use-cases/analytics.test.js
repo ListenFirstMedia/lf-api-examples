@@ -19,7 +19,7 @@ describe('Performing Analytics', () => {
             ],
             group_by: ['lfm.fact.date_str', 'lfm.brand_view.id'],
             sort: [{ field: 'lfm.fact.date_str', dir: 'DESC' }],
-            source_attributes: ['lfm.brand.name'],
+            meta_dimensions: ['lfm.brand.name'],
         };
 
         //support.dump(requestData);
@@ -37,7 +37,7 @@ describe('Performing Analytics', () => {
         let expectedCols = _.concat(
             requestData.metrics,
             requestData.group_by,
-            requestData.source_attributes
+            requestData.meta_dimensions
         );
         support.expectTableResponse(data, expectedCols);
     });
@@ -87,7 +87,7 @@ describe('Performing Analytics', () => {
                 'lfm.brand_view.id',
             ],
             sort: [{ field: 'facebook.post.interactions', dir: 'DESC' }],
-            source_attributes: ['lfm.content.author_name', 'lfm.content.link'],
+            meta_dimensions: ['lfm.content.author_name', 'lfm.content.link'],
             per_page: 100,
         };
 
@@ -105,7 +105,7 @@ describe('Performing Analytics', () => {
         let expectedCols = _.concat(
             requestData.metrics,
             requestData.group_by,
-            requestData.source_attributes
+            requestData.meta_dimensions
         );
         support.expectTableResponse(data, expectedCols);
         let brandViewIdx = _.findIndex(
@@ -148,7 +148,7 @@ describe('Performing Analytics', () => {
             ],
             group_by: ['lfm.brand_view.id'],
             sort: [{ field: 'lfm.brand_view.id', dir: 'DESC' }],
-            source_attributes: ['lfm.brand.name'],
+            meta_dimensions: ['lfm.brand.name'],
         };
 
         // support.dump(requestData);
@@ -165,7 +165,7 @@ describe('Performing Analytics', () => {
         let expectedCols = _.concat(
             requestData.metrics,
             requestData.group_by,
-            requestData.source_attributes
+            requestData.meta_dimensions
         );
         support.expectTableResponse(data, expectedCols);
     });
@@ -194,7 +194,7 @@ describe('Performing Analytics', () => {
             ],
             group_by: ['lfm.brand_view.id'],
             sort: [{ field: 'lfm.brand_view.id', dir: 'DESC' }],
-            source_attributes: ['lfm.brand.name'],
+            meta_dimensions: ['lfm.brand.name'],
         };
 
         //support.dump(requestData);
@@ -233,7 +233,7 @@ describe('Performing Analytics', () => {
                 { field: 'lfm.brand_view.id', dir: 'DESC' },
                 { field: 'lfm.content.type', dir: 'ASC' },
             ],
-            source_attributes: ['lfm.brand.name'],
+            meta_dimensions: ['lfm.brand.name'],
         };
 
         //support.dump(requestData)
@@ -265,7 +265,7 @@ describe('Performing Analytics', () => {
             ],
             group_by: ['lfm.fact.date_str', 'lfm.brand_view.id'],
             sort: [{ field: 'lfm.fact.date_str', dir: 'DESC' }],
-            source_attributes: ['lfm.brand.name'],
+            meta_dimensions: ['lfm.brand.name'],
             per_page: 100,
         };
 
@@ -304,7 +304,7 @@ describe('Performing Analytics', () => {
         let expectedCols = _.concat(
             requestData.metrics,
             requestData.group_by,
-            requestData.source_attributes
+            requestData.meta_dimensions
         );
         support.expectTableResponse(tbl, expectedCols);
     });
