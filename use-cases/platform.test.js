@@ -13,12 +13,13 @@ const UPDATE_SCOPE = ['DOCS', 'DATA', 'API'];
 describe('Working with Platform Endpoints', () => {
     test('retrieve the release notes', async () => {
         const data = await session.fetch('/v20200626/platform/release_notes');
-        //support.dump(data);
+        support.dump(data);
         support.expectRecords(data);
         data.records.forEach((release) => {
+            expect(release.api_version).toBeTruthy();
             expect(release.release_number).toBeGreaterThan(0);
             expect(release.released_on).toBeTruthy();
-            //expect(release.summary).toBeTruthy();
+            expect(release.summary).toBeTruthy();
             expect(release.updates).toBeTruthy();
             expect(release.updates.length).toBeGreaterThan(0);
             release.updates.forEach((update) => {
