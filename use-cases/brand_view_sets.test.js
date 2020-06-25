@@ -77,7 +77,7 @@ describe('Working with Brand View Sets', () => {
         let filters = [
             {
                 field: 'lfm.brand.programmers',
-                operator: '=',
+                operator: 'IN',
                 values: ['Showtime'],
             },
         ];

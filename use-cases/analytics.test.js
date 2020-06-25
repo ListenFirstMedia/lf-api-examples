@@ -19,10 +19,14 @@ describe('Performing Analytics', () => {
             ],
             group_by: ['lfm.fact.date_str', 'lfm.brand_view.id'],
             sort: [{ field: 'lfm.fact.date_str', dir: 'DESC' }],
-            meta_dimensions: ['lfm.brand.name'],
+            meta_dimensions: [
+                'lfm.brand.name',
+                'lfm.brand.genres',
+                'lfm.brand.programmers',
+            ],
         };
 
-        //support.dump(requestData);
+        // support.dump(requestData);
 
         let fetchOpts = {
             method: 'post',
@@ -33,7 +37,7 @@ describe('Performing Analytics', () => {
             '/v20200626/analytics/fetch',
             fetchOpts
         );
-        //support.dump(data);
+        // support.dump(data);
         let expectedCols = _.concat(
             requestData.metrics,
             requestData.group_by,
@@ -346,6 +350,126 @@ describe('Performing Analytics', () => {
             fail('expected brand limit error');
         } catch (err) {
             //support.dump(err);
+            support.expectError(err);
+        }
+    });
+
+    test('invalid brand meta dimensions', async () => {
+        let requestData = {
+            dataset_id: 'dataset_brand_listenfirst',
+            start_date: support.nDaysAgo(7),
+            end_date: support.yesterday(),
+            filters: [
+                { field: 'lfm.brand_view.id', operator: '=', values: [176817] },
+            ],
+            metrics: [
+                'lfm.audience_ratings.public_fan_acquisition_score',
+                'lfm.audience_ratings.public_audience_footprint',
+            ],
+            group_by: ['lfm.fact.date_str'],
+            sort: [{ field: 'lfm.fact.date_str', dir: 'DESC' }],
+            meta_dimensions: ['lfm.brand.name'],
+        };
+
+        //support.dump(requestData);
+
+        let fetchOpts = {
+            method: 'post',
+            body: JSON.stringify(requestData),
+        };
+
+        try {
+            const data = await session.fetch(
+                '/v20200626/analytics/fetch',
+                fetchOpts
+            );
+            fail('expected an error');
+        } catch (err) {
+            // support.dump(err);
+            support.expectError(err);
+        }
+    });
+
+    test('content meta dimensions', async () => {
+        let requestData = {
+            dataset_id: 'dataset_content_listenfirst',
+            start_date: support.nDaysAgo(7),
+            end_date: support.yesterday(),
+            filters: [
+                {
+                    field: 'lfm.brand_view.set_names',
+                    operator: 'IN',
+                    values: ['My Brands'],
+                },
+                {
+                    field: 'lfm.brand.name',
+                    operator: '=',
+                    values: ['CBS News'],
+                },
+            ],
+            metrics: ['lfm.content.responses', 'lfm.content.reactions'],
+            group_by: ['lfm.content.id'],
+            sort: [{ field: 'lfm.content.reactions', dir: 'DESC' }],
+            meta_dimensions: [
+                'lfm.content.channel',
+                'lfm.content.link',
+                'lfm.content.text',
+            ],
+            per_page: 5,
+        };
+
+        // support.dump(requestData);
+
+        let fetchOpts = {
+            method: 'post',
+            body: JSON.stringify(requestData),
+        };
+
+        const data = await session.fetch(
+            '/v20200626/analytics/fetch',
+            fetchOpts
+        );
+        // support.dump(data);
+        support.expectTableResponse(data);
+    });
+
+    test('invalid content meta dimensions', async () => {
+        let requestData = {
+            dataset_id: 'dataset_content_listenfirst',
+            start_date: support.nDaysAgo(7),
+            end_date: support.yesterday(),
+            filters: [
+                {
+                    field: 'lfm.brand.name',
+                    operator: '=',
+                    values: ['CBS News'],
+                },
+            ],
+            metrics: ['lfm.content.responses', 'lfm.content.reactions'],
+            group_by: ['lfm.fact.date_str'],
+            sort: [{ field: 'lfm.fact.date_str', dir: 'DESC' }],
+            meta_dimensions: [
+                'lfm.content.channel',
+                'lfm.content.link',
+                'lfm.content.text',
+            ],
+        };
+
+        //support.dump(requestData);
+
+        let fetchOpts = {
+            method: 'post',
+            body: JSON.stringify(requestData),
+        };
+
+        try {
+            const data = await session.fetch(
+                '/v20200626/analytics/fetch',
+                fetchOpts
+            );
+            fail('expected an error');
+        } catch (err) {
+            // support.dump(err);
             support.expectError(err);
         }
     });

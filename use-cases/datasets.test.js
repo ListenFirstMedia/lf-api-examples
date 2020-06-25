@@ -23,9 +23,10 @@ describe('Working with Datasets', () => {
 
     test('can list values of a listable brand dimension', async () => {
         const data = await session.fetch(
-            '/v20200626/dictionary/field_values?field=lfm.brand.genres'
+            '/v20200626/dictionary/field_values?field=lfm.brand.programmer_types'
         );
-        support.expectTableResponse(data);
+        // support.dump(data);
+        support.expectRecords(data);
     });
 
     test('can list values of a listable content dimension', async () => {
@@ -33,6 +34,6 @@ describe('Working with Datasets', () => {
             '/v20200626/dictionary/field_values?field=lfm.content.channel'
         );
         //support.dump(data);
-        support.expectTableResponse(data);
+        support.expectRecords(data);
     });
 });

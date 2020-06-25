@@ -1,0 +1,31 @@
+{
+    "dataset_id": "dataset_content_listenfirst",
+    "start_date": "2020-06-18",
+    "end_date": "2020-06-24",
+    "filters": [
+        {
+            "field": "lfm.brand_view.set_names",
+            "operator": "IN",
+            "values": ["My Brands"]
+        },
+        {
+            "field": "lfm.brand.name",
+            "operator": "=",
+            "values": ["CBS News"]
+        }
+    ],
+    "metrics": ["lfm.content.responses", "lfm.content.reactions"],
+    "group_by": ["lfm.content.id"],
+    "sort": [
+        {
+            "field": "lfm.content.reactions",
+            "dir": "DESC"
+        }
+    ],
+    "meta_dimensions": [
+        "lfm.content.channel",
+        "lfm.content.link",
+        "lfm.content.text"
+    ],
+    "per_page": 5
+}

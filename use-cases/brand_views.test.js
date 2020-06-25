@@ -81,7 +81,7 @@ describe('Working with Brand Views', () => {
         let filters = [];
         filters.push({
             field: 'lfm.brand.genres',
-            operator: '=',
+            operator: 'IN',
             values: ['Comedy'],
         });
         filters.push({
@@ -91,12 +91,12 @@ describe('Working with Brand Views', () => {
         });
         filters.push({
             field: 'lfm.brand.broadcast_dayparts',
-            operator: '=',
+            operator: 'IN',
             values: ['Prime Time'],
         });
         filters.push({
             field: 'lfm.brand.programmer_types',
-            operator: '=',
+            operator: 'IN',
             values: ['Premium Cable'],
         });
         filters.push({
@@ -162,7 +162,7 @@ describe('Working with Brand Views', () => {
         });
         filters.push({
             field: 'lfm.brand.genres',
-            operator: '=',
+            operator: 'IN',
             values: ['Comedy'],
         });
         filters.push({
@@ -172,12 +172,12 @@ describe('Working with Brand Views', () => {
         });
         filters.push({
             field: 'lfm.brand.broadcast_dayparts',
-            operator: '=',
+            operator: 'IN',
             values: ['Prime Time'],
         });
         filters.push({
             field: 'lfm.brand.programmer_types',
-            operator: '=',
+            operator: 'IN',
             values: ['Premium Cable'],
         });
         filters.push({
@@ -296,7 +296,7 @@ describe('Working with Brand Views', () => {
         let filters = [];
         filters.push({
             field: 'lfm.brand.programmers',
-            operator: '=',
+            operator: 'IN',
             values: ['CBS All Access'],
         });
 
@@ -338,7 +338,7 @@ describe('Working with Brand Views', () => {
         });
         filters.push({
             field: 'lfm.brand.programmers',
-            operator: '=',
+            operator: 'IN',
             values: ['CBS All Access'],
         });
 

@@ -1,0 +1,84 @@
+{
+    "columns": [
+        {
+            "id": "lfm.content.id",
+            "name": "Content ID",
+            "class": "DIMENSION",
+            "data_type": "STRING"
+        },
+        {
+            "id": "lfm.content.channel",
+            "name": "Channel",
+            "class": "DIMENSION",
+            "data_type": "STRING"
+        },
+        {
+            "id": "lfm.content.responses",
+            "name": "Content Responses",
+            "class": "METRIC",
+            "data_type": "INTEGER"
+        },
+        {
+            "id": "lfm.content.reactions",
+            "name": "Content Reactions",
+            "class": "METRIC",
+            "data_type": "INTEGER"
+        },
+        {
+            "id": "lfm.content.link",
+            "name": "Text Link",
+            "class": "DIMENSION",
+            "data_type": "STRING"
+        },
+        {
+            "id": "lfm.content.text",
+            "name": "Content Text",
+            "class": "DIMENSION",
+            "data_type": "STRING"
+        }
+    ],
+    "records": [
+        [
+            "19724d7b7856737675b51d330cdcb49e",
+            "twitter",
+            69259,
+            52485,
+            "http://www.twitter.com/15012486/status/1275413386738708482",
+            "Barcelona's Liceu Opera House reopened its doors for the first time in over three months to hold a concert for an audience of nearly 2,300 house plants https://t.co/oqFJjRF44g https://t.co/U6ri9lyEzJ"
+        ],
+        [
+            "bf1a613a6e542d523a24a3d03d002472",
+            "facebook",
+            31595,
+            21803,
+            "http://www.facebook.com/131459315949/posts/10158175475595950",
+            "BREAKING: A Georgia grand jury has indicted three men in the killing of Ahmaud Arbery, a 25-year-old black man who was pursued and shot dead as he jogged through a Brunswick neighborhood in February."
+        ],
+        [
+            "ffc84ae4d3161a82b0448442dd835d59",
+            "facebook",
+            24375,
+            19688,
+            "http://www.facebook.com/131459315949/posts/10158153811045950",
+            "BREAKING: Supreme Court strikes down the Trump administration's effort to dismantle DACA."
+        ],
+        [
+            "37fe2b8a1af9ccd92cf49380f6e6d740",
+            "facebook",
+            22678,
+            19204,
+            "http://www.facebook.com/131459315949/posts/10158158378610950",
+            "She completed her prestigious degree eight years after being shot by the Taliban for championing girls' education."
+        ],
+        [
+            "9297820b8ca041e129bd079844bdbbe7",
+            "facebook",
+            30462,
+            17030,
+            "http://www.facebook.com/131459315949/posts/10158170762150950",
+            "Barcelona's Liceu Opera House reopened its doors for the first time in over three months to hold a concert for an audience of nearly 2,300 house plants https://cbsn.ws/37RJV82"
+        ]
+    ],
+    "page": 1,
+    "has_more_pages": true
+}
