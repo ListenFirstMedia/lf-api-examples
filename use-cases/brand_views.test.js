@@ -73,9 +73,11 @@ describe('Working with Brand Views', () => {
             'lfm.brand.programmers',
             'lfm.brand.programmer_types',
             'lfm.brand.primary_genre',
+            'lfm.brand_view.type',
+            'lfm.brand_view.id',
             //unsupported
             //'lfm.brand.in_season',
-            //'lfm.brand_view.id',
+            //'lfm.brand_view.name',
         ];
 
         let filters = [];
@@ -121,7 +123,7 @@ describe('Working with Brand Views', () => {
         const data = await session.fetch(
             `/v20200626/brand_view_sets/${tvBrandSet.id}/brand_views?${queryStr}`
         );
-        //support.dump(data)
+        // support.dump(data);
         support.expectRecords(data);
         data.records.forEach((bv) => {
             support.expectBrandView(bv, fields);
@@ -373,6 +375,7 @@ describe('Working with Brand Views', () => {
             );
             fail('expected error');
         } catch (err) {
+            // support.dump(err);
             support.expectError(err);
         }
 
@@ -390,6 +393,7 @@ describe('Working with Brand Views', () => {
             );
             fail('expected error');
         } catch (err) {
+            // support.dump(err);
             support.expectError(err);
         }
 
@@ -408,6 +412,7 @@ describe('Working with Brand Views', () => {
             );
             fail('expected error');
         } catch (err) {
+            // support.dump(err);
             support.expectError(err);
         }
 
@@ -421,6 +426,7 @@ describe('Working with Brand Views', () => {
             );
             fail('expected error');
         } catch (err) {
+            // support.dump(err);
             support.expectError(err);
         }
     });

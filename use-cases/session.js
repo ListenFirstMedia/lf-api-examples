@@ -9,7 +9,10 @@ const LFM_API_CONFIG = {
     client_secret: process.env.LFM_API_CLIENT_SECRET,
     auth_host: process.env.LFM_API_AUTH_HOST || 'auth.lfmdev.in',
     api_host: process.env.LFM_API_HOST || 'api.lfmdev.in',
+    account_id: 443, // CBSi
 };
+
+// console.log(LFM_API_CONFIG);
 
 async function obtainAccessToken() {
     return new Promise((resolve, reject) => {
@@ -94,7 +97,8 @@ const Session = {
             headers: {
                 'content-type': 'application/json',
                 authorization: `Bearer ${access_token}`,
-                'x-api-key': `${LFM_API_CONFIG.api_key}`,
+                'x-api-key': LFM_API_CONFIG.api_key,
+                'lfm-acting-account': LFM_API_CONFIG.account_id,
             },
         };
         const fetchOpts = _.merge({}, opts, defaultOpts);
@@ -104,7 +108,7 @@ const Session = {
         if (res.ok) {
             return data;
         } else {
-            //console.log(data);
+            // console.log(data);
             if (res.status === 429) {
                 // sleep and retry
                 await new Promise((resolve) => setTimeout(resolve, 60000));
