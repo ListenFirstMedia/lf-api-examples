@@ -1,0 +1,82 @@
+{
+    "dataset_id": "dataset_content_facebook",
+    "start_date": "2020-07-22",
+    "end_date": "2020-07-28",
+    "filters": [
+        {
+            "field": "lfm.brand_view.type",
+            "operator": "=",
+            "values": [
+                "CUSTOM"
+            ]
+        },
+        {
+            "field": "lfm.brand.name",
+            "operator": "IN",
+            "values": [
+                "HBO Max",
+                "HBO Max Family"
+            ]
+        }
+    ],
+    "metrics": [
+        "facebook.post.likes",
+        "facebook.post.haha",
+        "facebook.post.wow",
+        "facebook.post.sad",
+        "facebook.post.angry",
+        "facebook.post.love",
+        "facebook.post.reactions",
+        "facebook.post.shares",
+        "facebook.post.comments",
+        "facebook.post.interactions",
+        "facebook.post_consumptions.photo_view_consumptions_count",
+        "facebook.post_consumptions.link_clicks_consumptions_count",
+        "facebook.post_consumptions.other_clicks_consumptions_count",
+        "facebook.post_insight.fbpoi_impressions_unique",
+        "facebook.post_insight.fbpoi_impressions_organic_unique",
+        "facebook.post_insight.fbpoi_impressions_paid_unique",
+        "facebook.post_insight.fbpoi_impressions",
+        "facebook.post_insight.fbpoi_impressions_organic",
+        "facebook.post_insight.fbpoi_impressions_paid",
+        "facebook.post_insight.fbpoi_video_views_organic",
+        "facebook.post_insight.fbpoi_video_views_paid",
+        "facebook.post_insight.fbpoi_impressions_viral",
+        "facebook.post_insight.fbpoi_impressions_viral_unique",
+        "facebook.post_insight.fbpoi_video_complete_views_organic",
+        "facebook.post_insight.fbpoi_video_complete_views_paid",
+        "facebook.post_insight.fbpoi_video_views_organic_unique",
+        "facebook.post_insight.fbpoi_video_views_paid_unique",
+        "facebook.post_insight.fbpoi_video_views_unique",
+        "facebook.post_video.views_m",
+        "facebook.post_video.crossposted_views_m",
+        "facebook.post.other",
+        "facebook.post_insight.fbpoi_video_views",
+        "facebook.post_insight.fbpoi_average_viewthru_v2",
+        "facebook.post_insight.fbpoi_video_complete_views_total"
+    ],
+    "group_by": [
+        "lfm.content.posted_on_date_str",
+        "lfm.brand_view.id",
+        "lfm.content.id",
+        "lfm.content.channel"
+    ],
+    "meta_dimensions": [
+        "lfm.content.link",
+        "lfm.brand.name"
+    ],
+    "sort": [
+        {
+            "field": "lfm.brand_view.id",
+            "dir": "ASC"
+        },
+        {
+            "field": "lfm.content.id",
+            "dir": "ASC"
+        },
+        {
+            "field": "lfm.content.posted_on_date_str",
+            "dir": "DESC"
+        }
+    ]
+}

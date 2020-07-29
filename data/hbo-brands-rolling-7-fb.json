@@ -1,0 +1,78 @@
+{
+  "dataset_id": "dataset_brand_facebook",
+  "start_date": "2020-07-22",
+  "end_date": "2020-07-28",
+  "filters": [
+    {
+      "field": "lfm.brand_view.type",
+      "operator": "=",
+      "values": [
+        "CUSTOM"
+      ]
+    },
+    {
+      "field": "lfm.brand.name",
+      "operator": "IN",
+      "values": [
+        "HBO Max",
+        "HBO Max Family"
+      ]
+    }
+  ],
+  "metrics": [
+    "facebook.page.likes",
+    "facebook.page.talking_about",
+    "facebook.page.total_post_likes_c",
+    "facebook.page.total_post_reactions_count_c",
+    "facebook.page.total_post_comments_c",
+    "facebook.page.total_post_love_count_c",
+    "facebook.page.total_post_haha_count_c",
+    "facebook.page.total_post_wow_count_c",
+    "facebook.page.total_post_sad_count_c",
+    "facebook.page.total_post_angry_count_c",
+    "facebook.page_insight.fbpai_impressions_unique",
+    "facebook.page_insight.fbpai_fan_adds_unique",
+    "facebook.page_insight.fbpai_fan_removes_unique",
+    "facebook.page_insight.fbpai_impressions_paid_unique",
+    "facebook.page_insight.fbpai_impressions_organic_unique",
+    "facebook.page_insight.fbpai_impressions_viral_unique",
+    "facebook.page_insight.fbpai_impressions",
+    "facebook.page_insight.fbpai_impressions_organic",
+    "facebook.page_insight.fbpai_impressions_paid",
+    "facebook.page_insight.fbpai_impressions_viral",
+    "facebook.page_insight.fbpai_video_views",
+    "facebook.page_insight.fbpai_video_views_organic",
+    "facebook.page_insight.fbpai_video_views_paid",
+    "facebook.post_video.views_c",
+    "facebook.post.other",
+    "facebook.post.interactions_views",
+    "facebook.post_insight.fbpoi_video_views_organic",
+    "facebook.post_insight.fbpoi_video_views_paid",
+    "facebook.post_insight.fbpoi_video_complete_views_paid",
+    "facebook.post_insight.fbpoi_video_views_organic_unique",
+    "facebook.post_insight.fbpoi_video_views_paid_unique",
+    "lfm.engagement_score.facebook",
+    "lfm.audience_ratings.facebook_audience_footprint",
+    "lfm.audience_ratings.facebook_fan_acquisition_score",
+    "lfm.post_engagement_score.post_engagement_fb",
+    "lfm.post_engagement_score.post_engagement_rate_fb",
+    "lfm.social_engagement_score.facebook_score"
+  ],
+  "group_by": [
+    "lfm.fact.date_str",
+    "lfm.brand_view.id"
+  ],
+  "meta_dimensions": [
+    "lfm.brand.name"
+  ],
+  "sort": [
+    {
+      "field": "lfm.brand_view.id",
+      "dir": "ASC"
+    },
+    {
+      "field": "lfm.fact.date_str",
+      "dir": "DESC"
+    }
+  ]
+}
