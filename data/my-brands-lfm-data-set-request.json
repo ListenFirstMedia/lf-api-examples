@@ -1,0 +1,26 @@
+{
+  "dataset_id": "dataset_brand_listenfirst",
+  "start_date": "2020-10-04",
+  "end_date": "2020-10-10",
+  "metrics": [
+    "lfm.audience_ratings.public_fan_acquisition_score",
+    "lfm.owned_videos_score.public_owned_video_views_delta"
+  ],
+  "group_by": ["lfm.brand_view.id"],
+  "page": 1,
+  "per_page": 100,
+  "filters": [
+    {
+      "field": "lfm.brand_view.set_names",
+      "operator": "IN",
+      "values": ["My Brands"]
+    }
+  ],
+  "sort": [
+    {
+      "field": "lfm.owned_videos_score.public_owned_video_views_delta",
+      "dir": "ASC"
+    }
+  ],
+  "meta_dimensions": ["lfm.brand.name"]
+}
