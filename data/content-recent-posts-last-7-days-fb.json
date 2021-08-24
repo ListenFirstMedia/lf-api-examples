@@ -1,23 +1,21 @@
 {
     "dataset_id": "dataset_content_facebook",
-    "start_date": "2020-07-22",
+    "start_date": "2020-06-28",
     "end_date": "2020-07-28",
     "filters": [
+	{
+	    "field": "lfm.brand_view.set_names",
+	    "operator": "IN",
+	    "values": ["My Brands"]
+	},
         {
-            "field": "lfm.brand_view.type",
-            "operator": "=",
+            "field": "lfm.fact.date_str",
+            "operator": "BETWEEN",
             "values": [
-                "CUSTOM"
+                "2020-07-22",
+                "2020-07-28"
             ]
-        },
-        {
-            "field": "lfm.brand.name",
-            "operator": "IN",
-            "values": [
-                "HBO Max",
-                "HBO Max Family"
-            ]
-        },
+        }
     ],
     "metrics": [
         "facebook.post.likes",

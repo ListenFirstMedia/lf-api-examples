@@ -9,9 +9,9 @@
             "values": ["My Brands"]
         },
         {
-            "field": "lfm.brand.name",
-            "operator": "=",
-            "values": ["CBS News"]
+	    "field": "lfm.brand_view.set_names",
+	    "operator": "IN",
+	    "values": ["My Brands"]
         }
     ],
     "metrics": ["lfm.content.responses", "lfm.content.reactions"],

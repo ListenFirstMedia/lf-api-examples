@@ -11,12 +11,9 @@
             ]
         },
         {
-            "field": "lfm.brand.name",
-            "operator": "IN",
-            "values": [
-                "HBO Max",
-                "HBO Max Family"
-            ]
+	    "field": "lfm.brand_view.set_names",
+	    "operator": "IN",
+	    "values": ["My Brands"]
         }
     ],
     "metrics": [
